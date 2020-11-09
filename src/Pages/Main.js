@@ -1,24 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Row from "../components/row/index";
+import "./style.css";
+
 
 function Main() {
     const [employees, changeEmployees] = useState([]);
-    function getEmployees() {
-        fetch("https://randomuser.me/api/?results=100").then((res) => (res.json())).then((data) => {
-            changeEmployees(data)
+    
+    useEffect(() => {
+        fetch("https://randomuser.me/api/?results=5").then((res) => (res.json())).then((data) => {
+            changeEmployees(data.results)
         })
+    }, [])
+
+    function ageSort() {
+        const sortedEmployees = employees.sort((a,b) => {
+            return a.dob.age - b.dob.age
+        })
+        changeEmployees(sortedEmployees);
+
+
     }
-
-
 
 
     return (
         <div>
-            {/* {employees.length
-                ? employees.map((emp, index) => (
-                    <h1>{emp.name}</h1>
-                ))
-                : getEmployees()
-            } */}
+            <button onClick= {ageSort} >Sort by age</button>
+            {  
+            (employees.length !== 0) && employees.map((emp, index) => (
+               <div key={index}>
+               <Row 
+               emp = {emp}
+               />
+               </div>
+            ))
+            
+            }
+        
         </div>
     )
 }
